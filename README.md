@@ -6,23 +6,17 @@ It was created as a learning project to strengthen frontend development skills a
 
 ---
 
-## 🌐 Live Demo
-> *Coming Soon!*  
-> *(You can host this project using GitHub Pages. Once hosted, add the live link here.)*
-
----
-
 ## 📑 Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Folder Structure](#folder-structure)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Screenshots](#screenshots)
-- [Technologies Used](#technologies-used)
-- [Future Improvements](#future-improvements)
-- [Contributing](#contributing)
-- [License](#license)
+- [Overview](##overview)
+- [Features](##features)
+- [Folder Structure](##folder-structure)
+- [Installation](##installation)
+- [Usage](##usage)
+- [Screenshots](##screenshots)
+- [Technologies Used](##technologies-used)
+- [Future Improvements](##future-improvements)
+- [Contributing](##contributing)
+- [License](##license)
 
 ---
 
@@ -139,11 +133,11 @@ Visit http://localhost:8080 in your browser.
 - Create a feature branch:
 ```bash
      git checkout -b feature/YourFeature
-
+```
 - Commit your changes:
 ```bash
      git commit -m "Add some feature"
-
+```
 - Push to the branch:
 ```bash
 git push origin feature/YourFeature
