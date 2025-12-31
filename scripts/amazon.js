@@ -1,5 +1,7 @@
 import {products} from "../data/products.js"
-import {cart, addToCart} from "../data/cart.js"
+import {addToCart, homePageCartQuantity} from "../data/cart.js"
+
+homePageCartQuantity();
 
 let generateProductHtml = "";
 
