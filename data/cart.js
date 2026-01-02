@@ -20,8 +20,6 @@ export function saveCartData(){
     localStorage.setItem("cart",JSON.stringify(cart));
 }
 
-console.log(cart);
-
 export function addToCart(){
   const addToCartBtn = document.querySelectorAll(".js-cart-button");
     addToCartBtn.forEach((button) => {
@@ -96,7 +94,6 @@ export function updateQuantity(productId, newQuantity){
   cart.forEach((cartitem) => {
     if(productId === cartitem.productId){
       cartitem.quantity = newQuantity;
-      console.log(cartitem.quantity);
     }
   })
   checkoutPageCartQuantity();

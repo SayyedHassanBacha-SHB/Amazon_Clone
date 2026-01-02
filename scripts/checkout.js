@@ -1,23 +1,19 @@
-import {cart,removeFromCart, saveCartData,checkoutPageCartQuantity, updateQuantity,updateDeliveryOption} from "../data/cart.js";
+import {cart,removeFromCart, saveCartData,checkoutPageCartQuantity, updateQuantity,updateDeliveryOption,showCartQuantity} from "../data/cart.js";
 import {products} from "../data/products.js";
-import { deliveryOptions } from "../data/deliveryoption.js";
+import { deliveryOptions, getDeliveryOption } from "../data/deliveryoption.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.11/esm/index.js";
 
-function renderCheckoutPage(){
+renderOrderDetails();
+
+function renderOrderDetails(){
 checkoutPageCartQuantity();
 let checkoutHTML = "";
 cart.forEach((cartitem) => {
     let matchingProduct =  products.find((item) => {
         return cartitem.productId === item.id;
     });
-    // console.log(matchingProduct);
-    const deliveryOptionId = cartitem.deliveryOptionId;
-    let deliveryOption = "";
-    deliveryOptions.forEach((option) => {
-      if(deliveryOptionId === option.id){
-        deliveryOption = option;
-      }
-    })
+
+    const deliveryOption = getDeliveryOption(cartitem.deliveryOptionId);
 
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
@@ -38,7 +34,7 @@ cart.forEach((cartitem) => {
                   ${matchingProduct.name}
                 </div>
                 <div class="product-price">
-                  ${(matchingProduct.priceCents/100).toFixed(2)}
+                  $${(matchingProduct.priceCents/100).toFixed(2)}
                 </div>
                 <div class="product-quantity">
                   <span>
@@ -76,6 +72,7 @@ document.querySelectorAll(".js-delete-link").forEach((deleteLink) => {
         document.querySelector(`.js-container-${productId}`).remove();
         checkoutPageCartQuantity();
         saveCartData();
+        renderPaymentDetails();
     })
 });
 
@@ -93,6 +90,7 @@ document.querySelectorAll(".js-save-link").forEach((saveLink) => {
     let newCartQuantity = Number(inputQuantity.value);
     updateQuantity(productId,newCartQuantity);
     document.querySelector(`.js-container-${productId}`).classList.remove("is-editing-quantity");
+    renderPaymentDetails();
   })
 })
 
@@ -127,11 +125,68 @@ document.querySelectorAll(".js-delivery-option").forEach((option) => {
   option.addEventListener("click",() => {
     const {productId, deliveryOptionId} = option.dataset;
     updateDeliveryOption(productId,deliveryOptionId);
-    renderCheckoutPage();
+    renderOrderDetails();
+    renderPaymentDetails();
   })
 })
 }
 
-renderCheckoutPage();
+renderPaymentDetails();
+
+function renderPaymentDetails(){
+  let totalitems = showCartQuantity();
+  let totalItemAmount= 0;
+  let shippingFees = 0;
+  cart.forEach((cartitem) => {
+    const product = products.find((product) => {
+      return product.id === cartitem.productId;
+    })
+    let itemAmount = product.priceCents * cartitem.quantity;
+    totalItemAmount += itemAmount;
+    const deliveryOption = getDeliveryOption(cartitem.deliveryOptionId);
+    shippingFees += deliveryOption.priceCents
+  })
+  const totalBeforeTax = totalItemAmount+shippingFees;
+  const tax = totalBeforeTax * 0.1;
+  const totalAmount = totalBeforeTax + tax;
+
+  let html = `
+    <div class="payment-summary-title">
+      Order Summary
+    </div>
+
+    <div class="payment-summary-row">
+      <div>Items (${totalitems}):</div>
+      <div class="payment-summary-money" >$${(totalItemAmount/100).toFixed(2)}</div>
+    </div>
+
+    <div class="payment-summary-row">
+      <div>Shipping &amp; handling:</div>
+      <div class="payment-summary-money">$${(shippingFees/100).toFixed(2)}</div>
+    </div>
+
+    <div class="payment-summary-row subtotal-row">
+      <div>Total before tax:</div>
+      <div class="payment-summary-money">$${(totalBeforeTax/100).toFixed(2)}</div>
+    </div>
+
+    <div class="payment-summary-row">
+      <div>Estimated tax (10%):</div>
+      <div class="payment-summary-money">$${(tax/100).toFixed(2)}</div>
+    </div>
+
+    <div class="payment-summary-row total-row">
+      <div>Order total:</div>
+      <div class="payment-summary-money">$${(totalAmount/100).toFixed(2)}</div>
+    </div>
+
+    <button class="place-order-button button-primary">
+      Place your order
+    </button>`;
+
+document.querySelector(".js-payment-summary").innerHTML = html;
+
+
+}
 
 
