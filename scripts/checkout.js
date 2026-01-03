@@ -5,6 +5,15 @@ import dayjs from "https://unpkg.com/dayjs@1.11.11/esm/index.js";
 
 renderOrderDetails();
 
+
+function isWeekened(date){
+  const day = date.format("dddd");
+  if(day === "Saturday" || day === "Sunday"){
+    return true;
+  }
+  return false;
+}
+
 function renderOrderDetails(){
 checkoutPageCartQuantity();
 let checkoutHTML = "";
@@ -16,7 +25,19 @@ cart.forEach((cartitem) => {
     const deliveryOption = getDeliveryOption(cartitem.deliveryOptionId);
 
     const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+    let deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+    let i = deliveryOption.deliveryDays;
+    while(true){
+      if(isWeekened(deliveryDate)){
+        deliveryDate = deliveryDate.add(1,"days");
+      }
+      else {
+        i--;
+      }
+      if(i === 0){
+        break;
+      }
+    }
     const dateString = deliveryDate.format("dddd, MMMM D");
 
     checkoutHTML += `
@@ -98,7 +119,19 @@ function deliveryOptionHtml(cartitem){
   let html = "";
   deliveryOptions.forEach((deliveryoption) => {
     const today = dayjs();
-    const deliveryDate = today.add(deliveryoption.deliveryDays, "days");
+    let deliveryDate = today.add(deliveryoption.deliveryDays, "days");
+    let i = deliveryoption.deliveryDays;
+    while(true){
+      if(isWeekened(deliveryDate)){
+        deliveryDate = deliveryDate.add(1,"days");
+      }
+      else {
+        i--;
+      }
+      if(i === 0){
+        break;
+      }
+    }
     const dateString = deliveryDate.format("dddd, MMMM D");
     const priceString = (deliveryoption.priceCents === 0) ? "FREE" : `$${(deliveryoption.priceCents/100).toFixed(2)}`;
     const isChecked = deliveryoption.id === cartitem.deliveryOptionId;
@@ -184,9 +217,7 @@ function renderPaymentDetails(){
       Place your order
     </button>`;
 
-document.querySelector(".js-payment-summary").innerHTML = html;
-
-
+    document.querySelector(".js-payment-summary").innerHTML = html;
 }
 
 
