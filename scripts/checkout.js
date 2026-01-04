@@ -115,6 +115,8 @@ document.querySelectorAll(".js-save-link").forEach((saveLink) => {
   })
 })
 
+
+
 function deliveryOptionHtml(cartitem){
   let html = "";
   deliveryOptions.forEach((deliveryoption) => {
@@ -166,6 +168,7 @@ document.querySelectorAll(".js-delivery-option").forEach((option) => {
 
 renderPaymentDetails();
 
+
 function renderPaymentDetails(){
   let totalitems = showCartQuantity();
   let totalItemAmount= 0;
@@ -213,9 +216,9 @@ function renderPaymentDetails(){
       <div class="payment-summary-money">$${(totalAmount/100).toFixed(2)}</div>
     </div>
 
-    <button class="place-order-button button-primary">
+    <a href="orders.html"><button class="place-order-button button-primary">
       Place your order
-    </button>`;
+    </button></a>`;
 
     document.querySelector(".js-payment-summary").innerHTML = html;
 }
