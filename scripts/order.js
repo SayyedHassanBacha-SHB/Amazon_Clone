@@ -1,9 +1,11 @@
-import {cart} from "../data/cart.js";
+import {cart,showCartQuantity} from "../data/cart.js";
 import {deliveryOptions,getDeliveryOption} from "../data/deliveryoption.js";
 import {products} from "../data/products.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.11/esm/index.js";
 
 renderOrderSummary();
+document.querySelector(".js-cart-quantity-op").innerHTML = showCartQuantity();
+
 
 function orderHeaderHTml(){
     const day = dayjs();
